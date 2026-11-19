@@ -1,0 +1,58 @@
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1c2333;
+  --muted: #667085;
+  --border: #e4e7ec;
+  --accent: #003c6c;
+  --gold: #fdc700;
+  --open: #157f3d;
+  --full: #b42318;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f141c;
+    --card: #171e29;
+    --text: #e6e9ef;
+    --muted: #98a2b3;
+    --border: #2a3342;
+    --accent: #6fa8dc;
+  }
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+main { max-width: 640px; margin: 0 auto; padding: 32px 16px; }
+header h1 { margin: 0; color: var(--accent); border-bottom: 4px solid var(--gold); display: inline-block; }
+header p { color: var(--muted); }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; display: grid; gap: 14px; }
+label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+input, select { font: inherit; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.consent { display: flex; align-items: flex-start; gap: 8px; font-weight: 400; }
+.consent input { margin-top: 3px; }
+
+button { font: inherit; padding: 12px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.link { background: none; color: var(--muted); padding: 4px 8px; font-weight: 400; }
+
+.message.ok { color: var(--open); margin: 0; }
+.message.error { color: var(--full); margin: 0; }
+
+h2 { margin: 0; font-size: 18px; }
+ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
+li > div { flex: 1; display: grid; gap: 2px; }
+.muted { color: var(--muted); font-size: 13px; }
+.badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.badge.open { background: color-mix(in srgb, var(--open) 15%, transparent); color: var(--open); }
+.badge.full { background: color-mix(in srgb, var(--full) 15%, transparent); color: var(--full); }
+.badge.pending { background: var(--border); color: var(--muted); }
+footer { margin-top: 24px; text-align: center; }
+
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }

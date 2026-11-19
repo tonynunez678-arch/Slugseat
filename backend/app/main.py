@@ -1,14 +1,17 @@
 import hashlib
 import logging
 import secrets
+import threading
 from contextlib import asynccontextmanager
 from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
+from pathlib import Path
 from statistics import median
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -26,7 +29,17 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
+    settings = get_settings()
+    stop = threading.Event()
+    thread = None
+    if settings.run_poller:
+        from app.poller import start_background
+
+        thread = start_background(settings, stop)
     yield
+    stop.set()
+    if thread:
+        thread.join(timeout=5)
 
 
 app = FastAPI(title="SlugSeat", lifespan=lifespan)
@@ -195,3 +208,11 @@ def metrics(session: Session = Depends(get_session)) -> Metrics:
         alerts_sent=len(alerts),
         median_alert_latency_seconds=median(latencies) if latencies else None,
     )
+
+
+def mount_frontend(target: FastAPI, dist: str) -> None:
+    if dist and Path(dist).is_dir():
+        target.mount("/", StaticFiles(directory=dist, html=True), name="frontend")
+
+
+mount_frontend(app, get_settings().frontend_dist)

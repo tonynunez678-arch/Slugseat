@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: slugseat
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: SLUGSEAT_DATABASE_URL
+        fromDatabase:
+          name: slugseat-db
+          property: connectionString
+      - key: SLUGSEAT_RUN_POLLER
+        value: "true"
+      - key: SLUGSEAT_NOTIFIER
+        value: email
+      - key: SLUGSEAT_SMTP_HOST
+        value: smtp.gmail.com
+      - key: SLUGSEAT_SMTP_PORT
+        value: "587"
+      - key: SLUGSEAT_SMTP_USER
+        sync: false
+      - key: SLUGSEAT_SMTP_PASSWORD
+        sync: false
+      - key: SLUGSEAT_EMAIL_FROM
+        sync: false
+
+databases:
+  - name: slugseat-db
+    plan: free
+    databaseName: slugseat
+    user: slugseat
+    ipAllowList: []

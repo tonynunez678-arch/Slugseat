@@ -1,4 +1,5 @@
 import logging
+import threading
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -120,15 +121,26 @@ class Poller:
             stats.alerts_sent += 1
 
 
-def main() -> None:
-    from app.config import get_settings
-    from app.db import SessionLocal, init_db
+def run_loop(poller: Poller, interval_seconds: float, stop: threading.Event, requests_made=lambda: 0) -> None:
+    while not stop.is_set():
+        started = time.monotonic()
+        stats = poller.run_once()
+        log.info(
+            "poll done checked=%d cache_hits=%d alerts=%d errors=%d total_requests=%d",
+            stats.classes_checked,
+            stats.cache_hits,
+            stats.alerts_sent,
+            len(stats.errors),
+            requests_made(),
+        )
+        stop.wait(max(interval_seconds - (time.monotonic() - started), 1))
+
+
+def start_background(settings, stop: threading.Event) -> threading.Thread:
+    from app.db import SessionLocal
     from app.notifier import build_notifier
     from app.scraper import ClassSearchClient, RateLimiter
 
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
-    settings = get_settings()
-    init_db()
     client = ClassSearchClient(
         settings.class_search_url,
         settings.user_agent,
@@ -136,21 +148,32 @@ def main() -> None:
         timeout=settings.request_timeout_seconds,
     )
     poller = Poller(SessionLocal, client.fetch_course, build_notifier(settings), settings.cache_ttl_seconds)
+
+    def target() -> None:
+        try:
+            run_loop(poller, settings.poll_interval_seconds, stop, lambda: client.requests_made)
+        finally:
+            client.close()
+
+    thread = threading.Thread(target=target, name="slugseat-poller", daemon=True)
+    thread.start()
+    return thread
+
+
+def main() -> None:
+    from app.config import get_settings
+    from app.db import init_db
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+    settings = get_settings()
+    init_db()
+    stop = threading.Event()
+    thread = start_background(settings, stop)
     try:
-        while True:
-            started = time.monotonic()
-            stats = poller.run_once()
-            log.info(
-                "poll done checked=%d cache_hits=%d alerts=%d errors=%d total_requests=%d",
-                stats.classes_checked,
-                stats.cache_hits,
-                stats.alerts_sent,
-                len(stats.errors),
-                client.requests_made,
-            )
-            time.sleep(max(settings.poll_interval_seconds - (time.monotonic() - started), 1))
-    finally:
-        client.close()
+        while thread.is_alive():
+            thread.join(1)
+    except KeyboardInterrupt:
+        stop.set()
 
 
 if __name__ == "__main__":

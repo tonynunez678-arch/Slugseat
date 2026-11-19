@@ -100,6 +100,17 @@ cd backend && pytest
 
 UCSC term codes are `2` + two-digit year + quarter digit: winter `0`, spring `2`, summer `4`, fall `8`. Fall 2026 is `2268`, Winter 2027 is `2270`.
 
+## Deploy to Render
+
+The repo includes a `Dockerfile` and a `render.yaml` blueprint. One web service builds the React site, serves it next to the API, and runs the poller in a background thread. A managed Postgres database stores everything.
+
+1. Create a Render account and connect GitHub.
+2. In the Render dashboard choose **New** > **Blueprint** and pick this repository.
+3. Fill in the three secret values when asked: `SLUGSEAT_SMTP_USER`, `SLUGSEAT_SMTP_PASSWORD` (the Gmail app password) and `SLUGSEAT_EMAIL_FROM`.
+4. Click **Apply**. The site goes live at `https://<service-name>.onrender.com`.
+
+The web service uses the Starter plan because free web services sleep when idle, which would pause the poller, and Render blocks outgoing email on free web services. Free Render Postgres databases expire after 30 days, so upgrade the database before then to keep your data.
+
 ## Responsible use
 
 - Only alerts people who opted in.
@@ -110,5 +121,5 @@ UCSC term codes are `2` + two-digit year + quarter digit: winter `0`, spring `2`
 ## Roadmap
 
 - Look up sections automatically so students only need to enter the course
-- Deploy the API and poller on Render or Fly.io
+- Unsubscribe link in alert emails
 - Alerting when the class search layout changes and parsing fails

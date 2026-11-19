@@ -1,5 +1,7 @@
+import os
 from functools import lru_cache
 
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,12 +28,33 @@ class Settings(BaseSettings):
     twilio_auth_token: str = ""
     twilio_from_number: str = ""
 
-    api_base_url: str = "http://localhost:8000"
-    frontend_url: str = "http://localhost:5173"
+    api_base_url: str = ""
+    frontend_url: str = ""
+    frontend_dist: str = ""
+    run_poller: bool = False
     verify_token_ttl_hours: int = 24
     verify_resend_seconds: int = 300
 
     cors_origins: list[str] = ["http://localhost:5173"]
+
+
+    @field_validator("database_url")
+    @classmethod
+    def use_psycopg_driver(cls, value: str) -> str:
+        for prefix in ("postgres://", "postgresql://"):
+            if value.startswith(prefix):
+                return "postgresql+psycopg://" + value[len(prefix):]
+        return value
+
+    @model_validator(mode="after")
+    def fill_public_urls(self) -> "Settings":
+        public_url = os.environ.get("RENDER_EXTERNAL_URL", "").rstrip("/")
+        if public_url:
+            self.api_base_url = self.api_base_url or public_url
+            self.frontend_url = self.frontend_url or public_url
+        self.api_base_url = self.api_base_url or "http://localhost:8000"
+        self.frontend_url = self.frontend_url or "http://localhost:5173"
+        return self
 
 
 @lru_cache

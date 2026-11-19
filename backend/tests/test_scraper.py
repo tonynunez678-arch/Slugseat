@@ -27,10 +27,21 @@ def test_parse_real_no_matches_page():
     assert parse_results(page) == []
 
 
+def test_parse_real_results_page():
+    page = (FIXTURES / "real_results.html").read_text(encoding="utf-8")
+    classes = parse_results(page)
+    assert [c.class_number for c in classes] == ["30628", "30621"]
+    first, second = classes
+    assert first.title == "CSE 114A - 01 Found of Program Lang"
+    assert first.status == "Open"
+    assert (first.enrolled, first.capacity, first.seats_open) == (29, 120, 91)
+    assert (second.enrolled, second.capacity, second.seats_open) == (100, 120, 20)
+
+
 def test_search_form_matches_live_form_fields():
-    page = (FIXTURES / "no_matches.html").read_text(encoding="utf-8")
-    live_fields = set(re.findall(r'name="(binds\[:[a-z_]+\])"', page))
-    sent_fields = {k for k in search_form("2270", "CSE", "101") if k.startswith("binds")}
+    page = (FIXTURES / "real_results.html").read_text(encoding="utf-8")
+    live_fields = set(re.findall(r'name="(binds\[:[a-z_]+\]|rec_start|rec_dur)"', page))
+    sent_fields = set(search_form("2270", "CSE", "101")) - {"action"}
     assert sent_fields <= live_fields
 
 

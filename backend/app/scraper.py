@@ -51,6 +51,8 @@ def search_form(term: str, subject: str, catalog_number: str) -> dict[str, str]:
         "binds[:hybrid]": "H",
         "binds[:synch]": "S",
         "binds[:person]": "P",
+        "rec_start": "0",
+        "rec_dur": "100",
     }
 
 

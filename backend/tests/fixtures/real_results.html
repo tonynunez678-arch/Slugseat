@@ -1,0 +1,719 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;" />
+    <title>UC Santa Cruz - Schedule of Classes</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="https://pisa.ucsc.edu/cs9/prd/stylesheets/soc.css?v=1794919986" />
+    
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgo=">    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+    parent.document.title = document.title;
+    </script><script type="text/javascript" src="https://pisa.ucsc.edu/cs9/prd/sr9_2013/js/jquery.form.js"></script><script type="text/javascript" src="https://pisa.ucsc.edu/cs9/prd/sr9_2013/js/results.js?v=1794919984"></script><script>$( function() {
+        $("[id^=class_title_], [id^=class_id_], [id^=class_nbr_]").click(function(){
+            var parentPanel = $(this).closest("[id^=rowpanel]");
+            var detailForm = $("[id^=detail_form_]", parentPanel);
+            detailForm.submit();
+            return false;
+        });
+        $("#search_box").init_search_dialog('results');
+        $("#search_link, #search_link_bot").click( function() { $("#search_box").dialog('open') });
+    }
+    );
+    </script><script type="text/javascript" src="https://pisa.ucsc.edu/cs9/prd/sr9_2013/js/search.js?v=1794919984"></script><script>$(
+        function() {
+            on_term_init($("#term_dropdown").val());
+            $("#crse_units_op").showHide_crse_units();
+            $("#search_anchor").focus();
+            
+            init_multiselects();
+
+            $("#term_dropdown").change(
+                function() {
+                    on_term_change($("#term_dropdown").val());
+                    return false;
+                }
+            ); // term_dropdown.change
+
+            $("#crse_units_op").change(
+                function() { $("#crse_units_op").showHide_crse_units(); }
+            );
+
+            $("#search_button").click(
+                function() {
+                        if ( validate_input_count() ) {
+                            $("#searchForm").submit();
+                        } else {
+                            return false;
+                        }
+                }
+            );
+        } // function
+    ); </script>    </head>
+
+    <body>
+    <main>
+<div id="search_box" style="display: none;" title="Search">
+    
+<div id="subjectTerm" style="display:none;">
+    <form action="handler.php" method="post" name="subjectTermForm" id="subjectTermForm">
+        <input type="hidden" name="subject_term" id="subject_term" value="" />
+    </form>
+</div>
+
+<form action="index.php" method="post" name="searchForm" id="searchForm" role="search">
+    <input type="hidden" name="action" value="results" />
+
+    
+                        <div class="form-group row">
+                <label for="term_dropdown" class="col-sm-2 form-control-label">
+                    <b>Term</b>
+                </label>
+                <div class="col-sm-10">
+                    <select name="binds[:term]" id="term_dropdown" class="form-control">
+                        <option value='2270' selected="selected">2027 Winter Quarter</option><option value='2268' >2026 Fall Quarter</option><option value='2264' >2026 Summer Quarter</option><option value='2262' >2026 Spring Quarter</option><option value='2260' >2026 Winter Quarter</option><option value='2258' >2025 Fall Quarter</option><option value='2254' >2025 Summer Quarter</option><option value='2252' >2025 Spring Quarter</option><option value='2250' >2025 Winter Quarter</option><option value='2248' >2024 Fall Quarter</option><option value='2244' >2024 Summer Quarter</option><option value='2242' >2024 Spring Quarter</option><option value='2240' >2024 Winter Quarter</option><option value='2238' >2023 Fall Quarter</option><option value='2234' >2023 Summer Quarter</option><option value='2232' >2023 Spring Quarter</option><option value='2230' >2023 Winter Quarter</option><option value='2228' >2022 Fall Quarter</option><option value='2224' >2022 Summer Quarter</option><option value='2222' >2022 Spring Quarter</option><option value='2220' >2022 Winter Quarter</option><option value='2218' >2021 Fall Quarter</option><option value='2214' >2021 Summer Quarter</option><option value='2212' >2021 Spring Quarter</option><option value='2210' >2021 Winter Quarter</option><option value='2208' >2020 Fall Quarter</option><option value='2204' >2020 Summer Quarter</option><option value='2202' >2020 Spring Quarter</option><option value='2200' >2020 Winter Quarter</option><option value='2198' >2019 Fall Quarter</option><option value='2194' >2019 Summer Quarter</option><option value='2192' >2019 Spring Quarter</option><option value='2190' >2019 Winter Quarter</option><option value='2188' >2018 Fall Quarter</option><option value='2184' >2018 Summer Quarter</option><option value='2182' >2018 Spring Quarter</option><option value='2180' >2018 Winter Quarter</option><option value='2178' >2017 Fall Quarter</option><option value='2174' >2017 Summer Quarter</option><option value='2172' >2017 Spring Quarter</option><option value='2170' >2017 Winter Quarter</option><option value='2168' >2016 Fall Quarter</option><option value='2164' >2016 Summer Quarter</option><option value='2162' >2016 Spring Quarter</option><option value='2160' >2016 Winter Quarter</option><option value='2158' >2015 Fall Quarter</option><option value='2154' >2015 Summer Quarter</option><option value='2152' >2015 Spring Quarter</option><option value='2150' >2015 Winter Quarter</option><option value='2148' >2014 Fall Quarter</option><option value='2144' >2014 Summer Quarter</option><option value='2142' >2014 Spring Quarter</option><option value='2140' >2014 Winter Quarter</option><option value='2138' >2013 Fall Quarter</option><option value='2134' >2013 Summer Quarter</option><option value='2132' >2013 Spring Quarter</option><option value='2130' >2013 Winter Quarter</option><option value='2128' >2012 Fall Quarter</option><option value='2124' >2012 Summer Quarter</option><option value='2122' >2012 Spring Quarter</option><option value='2120' >2012 Winter Quarter</option><option value='2118' >2011 Fall Quarter</option><option value='2114' >2011 Summer Quarter</option><option value='2112' >2011 Spring Quarter</option><option value='2110' >2011 Winter Quarter</option><option value='2108' >2010 Fall Quarter</option><option value='2104' >2010 Summer Quarter</option><option value='2102' >2010 Spring Quarter</option><option value='2100' >2010 Winter Quarter</option><option value='2098' >2009 Fall Quarter</option><option value='2094' >2009 Summer Quarter</option><option value='2092' >2009 Spring Quarter</option><option value='2090' >2009 Winter Quarter</option><option value='2088' >2008 Fall Quarter</option><option value='2084' >2008 Summer Quarter</option><option value='2082' >2008 Spring Quarter</option><option value='2080' >2008 Winter Quarter</option><option value='2078' >2007 Fall Quarter</option><option value='2074' >2007 Summer Quarter</option><option value='2072' >2007 Spring Quarter</option><option value='2070' >2007 Winter Quarter</option><option value='2068' >2006 Fall Quarter</option><option value='2064' >2006 Summer Quarter</option><option value='2062' >2006 Spring Quarter</option><option value='2060' >2006 Winter Quarter</option><option value='2058' >2005 Fall Quarter</option><option value='2054' >2005 Summer Quarter</option><option value='2052' >2005 Spring Quarter</option><option value='2050' >2005 Winter Quarter</option><option value='2048' >2004 Fall Quarter</option>                    </select>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="Session"
+                    class="col-sm-2 form-control-label"><b>Session</b></label>
+                <div class="col-sm-10">
+                    <select name="binds[:session_code]" id="Session" class="form-control form-control-sm">
+                        <option value="" selected="selected">All Sessions</option>
+                        <option value='ED1' >Education Masters, Fifth Qtr</option><option value='ED2' >Education Masters, First Qtr</option><option value='IND' >Independent Study Session</option><option value='1' >Regular Academic Session</option><option value='5S1' >Summer Session 1 (5 Weeks)</option><option value='S10' >Summer Session 10 Weeks</option><option value='5S2' >Summer Session 2 (5 Weeks)</option><option value='S8W' >Summer Session 8 Weeks</option>                    </select>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="reg_status"
+                    class="col-sm-2 form-control-label"><b>Status</b></label>
+                <div class="col-sm-10">
+                    <select name="binds[:reg_status]" id="reg_status" class="form-control form-control-sm">
+                        <option value='O' >Open Classes</option><option value='all'  selected="selected">All Classes</option>                    </select>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="subject"
+                    class="col-sm-2 form-control-label"><b>Subject</b></label>
+                <div class="col-sm-10">
+                                        <div id="admin_subject">
+                        <select name="binds[:subject]" id="subject" class="form-control form-control-sm"
+                            placeholder="Select">
+                            <option value="" selected="selected">&nbsp;</option>
+                            <option value="">All Subjects</option>
+                            <option value='ANTH' >Anthropology (ANTH)</option><option value='APLX' >Applied Linguistics (APLX)</option><option value='AM' >Applied Mathematics (AM)</option><option value='ARBC' >Arabic (ARBC)</option><option value='ART' >Art (ART)</option><option value='ARTG' >Art&Des:Games&PlayableMedia (ARTG)</option><option value='ASTR' >Astronomy and Astrophysics (ASTR)</option><option value='BIOC' >Biochemistry and Molecular Bio (BIOC)</option><option value='BIOL' >Biology: Molecular Cell & Dev (BIOL)</option><option value='BIOE' >Biology:Ecology & Evolutionary (BIOE)</option><option value='BME' >Biomolecular Engineering (BME)</option><option value='CRSN' >Carson College (CRSN)</option><option value='CHEM' >Chemistry and Biochemistry (CHEM)</option><option value='CHIN' >Chinese (CHIN)</option><option value='CSP' >Coastal Science and Policy (CSP)</option><option value='CLNI' >College Nine (CLNI)</option><option value='CMMU' >Community Studies (CMMU)</option><option value='CMPM' >Computational Media (CMPM)</option><option value='CSE'  selected="selected">Computer Science & Engineering (CSE)</option><option value='COWL' >Cowell College (COWL)</option><option value='CT' >Creative Technologies (CT)</option><option value='CRES' >Critical Race & Ethnic Studies (CRES)</option><option value='CRWN' >Crown College (CRWN)</option><option value='EART' >Earth Sciences (EART)</option><option value='ECON' >Economics (ECON)</option><option value='EDUC' >Education (EDUC)</option><option value='ECE' >Electrical & Computer Engineer (ECE)</option><option value='ESCI' >Environmental Sciences (ESCI)</option><option value='ENVS' >Environmental Studies (ENVS)</option><option value='FMST' >Feminist Studies (FMST)</option><option value='FILM' >Film and Digital Media (FILM)</option><option value='FREN' >French (FREN)</option><option value='GIST' >Geographic Information Systems (GIST)</option><option value='GCH' >Global and Community Health (GCH)</option><option value='GRAD' >Graduate (GRAD)</option><option value='GREE' >Greek (GREE)</option><option value='HEBR' >Hebrew (HEBR)</option><option value='HIS' >History (HIS)</option><option value='HAVC' >History of Art&Visual Culture (HAVC)</option><option value='HISC' >History of Consciousness (HISC)</option><option value='HCI' >Human Computer Interaction (HCI)</option><option value='HTEC' >Humanizing Technology (HTEC)</option><option value='ITAL' >Italian (ITAL)</option><option value='JAPN' >Japanese (JAPN)</option><option value='JRLC' >John R. Lewis College (JRLC)</option><option value='KRSG' >Kresge College (KRSG)</option><option value='LATN' >Latin (LATN)</option><option value='LALS' >Latin American&Latino Studies (LALS)</option><option value='LGST' >Legal Studies (LGST)</option><option value='LING' >Linguistics (LING)</option><option value='LIT' >Literature (LIT)</option><option value='MSE' >Materials Sci & Eng (MSE)</option><option value='MATH' >Mathematics (MATH)</option><option value='MERR' >Merrill College (MERR)</option><option value='METX' >Microbiol & Environ Toxicology (METX)</option><option value='MUSC' >Music (MUSC)</option><option value='NLP' >Natural Language Processing (NLP)</option><option value='OAKS' >Oakes College (OAKS)</option><option value='OCEA' >Ocean Sciences (OCEA)</option><option value='PHIL' >Philosophy (PHIL)</option><option value='PHYE' >Physical Education (PHYE)</option><option value='PHYS' >Physics (PHYS)</option><option value='POLI' >Politics (POLI)</option><option value='PRTR' >Porter College (PRTR)</option><option value='PSYC' >Psychology (PSYC)</option><option value='PUNJ' >Punjabi (PUNJ)</option><option value='SCIC' >Science Communication (SCIC)</option><option value='SOCD' >Social Documentation (SOCD)</option><option value='SOCY' >Sociology (SOCY)</option><option value='SPAN' >Spanish (SPAN)</option><option value='SPHS' >Spanish for Heritage Speakers (SPHS)</option><option value='STAT' >Statistics (STAT)</option><option value='STEV' >Stevenson College (STEV)</option><option value='TIM' >Technology & Info Management (TIM)</option><option value='THEA' >Theater Arts (THEA)</option><option value='UCDC' >UCDC (UCDC)</option><option value='VAST' >Visualizing Abolition Studies (VAST)</option><option value='WRIT' >Writing (WRIT)</option><option value='YIDD' >Yiddish (YIDD)</option>                        </select>
+                    </div>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="catalog_nbr"
+                    class="col-sm-2 form-control-label"><b>Course Number</b></label>
+                <div class="col-sm-10">
+                    <label for="catalog_nbr_fltr" class="sr-only">Class Number Filter</label>
+                    <div class="col-sm-6" style="margin-left: 0px; padding-left: 0px;">
+                        <select id="catalog_nbr_fltr"
+                            name="binds[:catalog_nbr_op]"
+                            class="form-control form-control-sm">
+                            <option value='=' selected="selected">is exactly</option><option value='contains' >contains</option><option value='<=' >less than or equal to</option><option value='>=' >greater than or equal to</option>                        </select>
+                    </div>
+                    <div class="col-sm-6" style="margin-right: 0px; padding-right: 0px;">
+                                                <input type="text" placeholder="Course #" class="form-control form-control-sm" maxlength="5"
+                            name="binds[:catalog_nbr]" id="catalog_nbr" value="114A" />
+                    </div>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="title"
+                    class="col-sm-2 form-control-label"><b>Course Title Keyword</b></label>
+                <div class="col-sm-10">
+                                        <input type="text" class="form-control form-control-sm" maxlength="50" name="binds[:title]"
+                        id="title" value="" />
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="instructor"
+                    class="col-sm-2 form-control-label"><b>Instructor Last Name</b></label>
+                <div class="col-sm-10">
+                    <div class="col-sm-6" style="margin-left: 0px; padding-left: 0px;">
+                        <label for="instructor_fltr" class="sr-only">Instructer Filter</label>
+                        <select id="instructor_fltr"
+                            name="binds[:instr_name_op]"
+                            class="form-control form-control-sm">
+                            <option value="=" selected="selected">is exactly</option><option value="contains" >contains</option><option value="begins" >begins with</option>                        </select>
+                    </div>
+                    <div class="col-sm-6" style="margin-right: 0px; padding-right: 0px;">
+                                                <input type="text" class="form-control form-control-sm" placeholder="Last Name" maxlength="50"
+                            name="binds[:instructor]" id="instructor" value="" />
+                    </div>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <div id="ge_label" class="col-sm-2 form-control-label"><b>General Education</b></div>
+                <div class="col-sm-10">
+                                        <details class="multiselect-details">
+                        <summary class="form-control form-control-sm" id="ge_summary_label" aria-expanded="false" aria-live="polite">
+                            Select Requirements...                        </summary>
+                        <div class="options-list">
+                            <fieldset>
+                                <legend class="sr-only">General Education</legend>
+                                                                        <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="AH&I"                                                     onchange="updateGeSummary(this)">
+                                                AH&I (American History & Institutions)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="C"                                                     onchange="updateGeSummary(this)">
+                                                C (Composition)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="CC"                                                     onchange="updateGeSummary(this)">
+                                                CC (Cross-Cultural Analysis)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="ER"                                                     onchange="updateGeSummary(this)">
+                                                ER (Ethnicity & Race)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="IM"                                                     onchange="updateGeSummary(this)">
+                                                IM (Interpreting Arts & Media)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="MF"                                                     onchange="updateGeSummary(this)">
+                                                MF (Mathematical & Formal Reasoning)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="PE-E"                                                     onchange="updateGeSummary(this)">
+                                                PE-E (Environmental Awareness)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="PE-H"                                                     onchange="updateGeSummary(this)">
+                                                PE-H (Human Behavior)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="PE-T"                                                     onchange="updateGeSummary(this)">
+                                                PE-T (Technology & Society)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="PR-C"                                                     onchange="updateGeSummary(this)">
+                                                PR-C (Creative Process)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="PR-E"                                                     onchange="updateGeSummary(this)">
+                                                PR-E (Collaborative Endeavor)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="PR-S"                                                     onchange="updateGeSummary(this)">
+                                                PR-S (Service Learning)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="SI"                                                     onchange="updateGeSummary(this)">
+                                                SI (Scientific Inquiry)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="SR"                                                     onchange="updateGeSummary(this)">
+                                                SR (Statistical Reasoning)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="TA"                                                     onchange="updateGeSummary(this)">
+                                                TA (Textual Analysis)                                            </label>
+                                        </div>
+                                                                            <div class="checkbox" style="margin: 5px 0;">
+                                            <label style="display: block; font-weight: normal; cursor: pointer;">
+                                                <input type="checkbox" name="binds[:ge][]" value="AnyGE"                                                     onchange="updateGeSummary(this)">
+                                                Any Requirement                                            </label>
+                                        </div>
+                                                                </fieldset>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="crse_units_exact"
+                    class="col-sm-2 form-control-label"><b>Course Units</b></label>
+                <label for="crse_units_op" class="sr-only">Course Units Filter</label>
+
+                <div class="col-sm-10">
+                    <div class="col-sm-6" style="margin-left: 0px; padding-left: 0px;">
+                        <select class="form-control form-control-sm"
+                            name="binds[:crse_units_op]"
+                            id="crse_units_op">
+                            <option value="=" selected="selected">is exactly</option><option value="between" >between</option>                        </select>
+                    </div>
+                    <div id="crse_units_between" class="col-sm-6"
+                        style="display:none; margin-right: 0px; padding-right: 0px;">
+                                                <label for="crse_units_from" class="sr-only">Course Units From</label>
+                        <input type="text" class="form-control form-control-sm" maxlength="2"
+                            name="binds[:crse_units_from]" id="crse_units_from" placeholder="Units From"
+                            value="" />
+                        and
+                        <label for="crse_units_to" class="sr-only">Course Units To</label>
+                        <input type="text" class="form-control form-control-sm" maxlength="2"
+                            name="binds[:crse_units_to]" id="crse_units_to" placeholder="Units To"
+                            value="" />
+                    </div>
+                    <div id="crse_units_exact_div" class="col-sm-6" style="margin-right: 0px; padding-right: 0px;">
+                                                <input type="text" class="form-control form-control-sm" maxlength="2"
+                            name="binds[:crse_units_exact]" id="crse_units_exact" placeholder="Units"
+                            value="" />
+                    </div>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="Days"
+                    class="col-sm-2 form-control-label"><b>Meeting Days</b></label>
+                <div class="col-sm-10">
+                    <select name="binds[:days]" id="Days" class="form-control form-control-sm">
+                        <option value="">&nbsp;</option>
+                        <option value="">All Days</option>
+                        <option value='MTWR' >MTuWTh</option><option value='MTWRF' >MTuWThF</option><option value='MWF' >MWF</option><option value='MW' >MW</option><option value='TWR' >TuWTh</option><option value='TR' >TuTh</option><option value='M' >M</option><option value='T' >T</option><option value='W' >W</option><option value='R' >Th</option><option value='F' >F</option>                    </select>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="Times"
+                    class="col-sm-2 form-control-label"><b>Meeting Times</b></label>
+                <div class="col-sm-10">
+                    <select name="binds[:times]" id="Times" class="form-control form-control-sm">
+                        <option value="">&nbsp;</option>
+                        <option value="">All Times</option>
+                        <option value='Morning' >Morning</option><option value='Afternoon' >Afternoon</option><option value='Evening' >Evening</option><option value='08:00AM09:05AM' >0800AM - 0905AM</option><option value='08:00AM09:35AM' >0800AM - 0935AM</option><option value='09:20AM10:25AM' >0920AM - 1025AM</option><option value='09:50AM11:25AM' >0950AM - 1125AM</option><option value='10:40AM11:45AM' >1040AM - 1145AM</option><option value='11:40AM01:15PM' >1140AM - 0115PM</option><option value='12:00PM01:05PM' >1200PM - 0105PM</option><option value='01:20PM02:25PM' >0120PM - 0225PM</option><option value='01:30PM03:05PM' >0130PM - 0305PM</option><option value='02:40PM03:45PM' >0240PM - 0345PM</option><option value='03:20PM04:55PM' >0320PM - 0455PM</option><option value='04:00PM05:05PM' >0400PM - 0505PM</option><option value='05:20PM06:55PM' >0520PM - 0655PM</option><option value='07:10PM08:45PM' >0710PM - 0845PM</option><option value='08:00PM09:45PM' >0800PM - 0945PM</option>                    </select>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <label for="acad_career"
+                    class="col-sm-2 form-control-label"><b>Course Career</b></label>
+                <div class="col-sm-10">
+                    <select name="binds[:acad_career]" id="acad_career" class="form-control form-control-sm">
+                        <option value="" selected="selected">&nbsp;</option>
+                        <option value="">Any</option>
+                        <option value='UGRD' >Undergraduate</option><option value='GRAD' >Graduate</option>                    </select>
+                </div>
+            </div>
+
+                        <div class="form-group row">
+                <div id="instr_mode_label" class="col-sm-2 form-control-label">
+                    <b>Instruction Mode</b>
+                </div>
+                <div class="col-sm-10">
+                                        <details class="multiselect-details instr-details">
+                        <summary class="form-control form-control-sm" id="instr_summary_label" aria-expanded="false" aria-live="polite" aria-describedby="instr_mode_help">
+                            4 Selected                        </summary>
+                        <div class="options-list">
+                            <fieldset>
+                                <legend class="sr-only">Instruction Mode</legend>
+                                                                    <div class="checkbox" style="margin: 5px 0;">
+                                        <label style="display: block; font-weight: normal; cursor: pointer;">
+                                            <input type="checkbox" name="binds[:asynch]" id="instr_mode_asynch" value="A" checked="checked"                                                onchange="updateInstrSummary()">
+                                            Asynchronous Online                                        </label>
+                                    </div>
+                                                                    <div class="checkbox" style="margin: 5px 0;">
+                                        <label style="display: block; font-weight: normal; cursor: pointer;">
+                                            <input type="checkbox" name="binds[:hybrid]" id="instr_mode_hybrid" value="H" checked="checked"                                                onchange="updateInstrSummary()">
+                                            Hybrid                                        </label>
+                                    </div>
+                                                                    <div class="checkbox" style="margin: 5px 0;">
+                                        <label style="display: block; font-weight: normal; cursor: pointer;">
+                                            <input type="checkbox" name="binds[:synch]" id="instr_mode_synch" value="S" checked="checked"                                                onchange="updateInstrSummary()">
+                                            Synchronous Online                                        </label>
+                                    </div>
+                                                                    <div class="checkbox" style="margin: 5px 0;">
+                                        <label style="display: block; font-weight: normal; cursor: pointer;">
+                                            <input type="checkbox" name="binds[:person]" id="instr_mode_person" value="P" checked="checked"                                                onchange="updateInstrSummary()">
+                                            In Person                                        </label>
+                                    </div>
+                                                            </fieldset>
+                        </div>
+                    </details>
+                                            <span id="instr_mode_help" class="help-block" style="margin-bottom: 0;">
+                            Search for classes with these <a href="https://docs.google.com/document/d/e/2PACX-1vQomMoNZR0tvGQBvRMAOEK6m0wqVozhGCPPTbPmuQ5d3sIacXzqfEaYk04c1S1D06gKyddKvbKrFSJ2/pub" target = " _blank">instruction modes</a>. Synchronous Online and Asynchronous Online are both online/remote instruction                        </span>
+                                    </div>
+            </div>           
+
+            <div class="row">
+                <div class="col-sm-10">
+                    <div id="SSLink">
+                        <a href="https://uconline.edu"
+                            target="_blank">Enroll in UC Online Cross Campus Classes</a>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+
+            
+    </div>
+</form></div>
+
+
+
+<div class="panel panel-info center-block" style="max-width: 1000px;">
+    <div class="panel-heading">
+        <h1 style="display:inline-block;"><i class="fa fa-search fa-pull-left" aria-hidden="true"></i>
+            Search Results
+        </h1><img src="./logo.png" style="float: right;" alt="UCSC Logo">
+        <div style="clear:both;"></div>
+    </div>
+    <div class="panel-body" style="padding-top: 0px;">
+
+        <div class="row" style="padding: 5px;">
+            <div class="hide-print">
+                <a href="index.php"><i class="fa fa-search" aria-hidden="true"></i> Begin new search</a> <br />
+                <a href="" id="search_link" onClick="return false;"><i class="fa fa-search-plus" aria-hidden="true"></i>
+                    Refine this search</a>
+            </div>
+        </div>
+
+        <div class="row" style="background-color: #eee; padding: 10px 15px;">
+
+                        <div style="margin-bottom: 5px;">
+                <div class="hide-print" style="float: left;">
+                    <b>1</b> - <b>2</b> of
+                    <b>2</b>                 </div>
+
+                <div style="float: right;">
+                                            <span style="margin-left: 10px;">
+                            <img src="https://pisa.ucsc.edu/cs9/prd/images/PS_CS_STATUS_OPEN_ICN_1.gif" aria-hidden="true"
+                                alt="Open">
+                            <span aria-hidden="true">Open</span>
+                        </span>
+                                            <span style="margin-left: 10px;">
+                            <img src="https://pisa.ucsc.edu/cs9/prd/images/PS_CS_STATUS_CLOSED_ICN_1.gif" aria-hidden="true"
+                                alt="Closed">
+                            <span aria-hidden="true">Closed</span>
+                        </span>
+                                            <span style="margin-left: 10px;">
+                            <img src="https://pisa.ucsc.edu/cs9/prd/images/PS_CS_STATUS_WAITLIST_ICN_1.gif" aria-hidden="true"
+                                alt="Closed with Wait List">
+                            <span aria-hidden="true">Closed with Wait List</span>
+                        </span>
+                                    </div>
+                <div style="clear: both;"></div>
+            </div>
+
+                        <div>
+                <div id="display_search" style="float: left; margin-bottom: 5px; margin-left:0px; margin-top: 6px;">
+                    <span class="search-filter-display"><b>Term</b>: 2027 Winter Quarter&nbsp;&nbsp;|&nbsp;&nbsp;<b>Status</b>: All Classes&nbsp;&nbsp;|&nbsp;&nbsp;<b>Subject</b>: Computer Science & Engineering (CSE)&nbsp;&nbsp;|&nbsp;&nbsp;<b>Course Number</b> is exactly 114A&nbsp;&nbsp;|&nbsp;&nbsp;<b>Asynchronous Online</b>&nbsp;&nbsp;|&nbsp;&nbsp;<b>Hybrid</b>&nbsp;&nbsp;|&nbsp;&nbsp;<b>Synchronous Online</b>&nbsp;&nbsp;|&nbsp;&nbsp;<b>In Person</b></span>
+                </div>
+
+                <div style="float: right; width: 25%; text-align: right;">
+                    <form class="hide-print" action="index.php" name="resultsForm"
+                        id="resultsForm" method="post" style="margin: 0;">
+                        <input type="hidden" id="page_action" name="action" value="">
+                                                                                    <input type="hidden" name="binds[:term]"
+                                    value="2270">
+                                                                                                                <input type="hidden" name="binds[:session_code]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:reg_status]"
+                                    value="all">
+                                                                                                                <input type="hidden" name="binds[:subject]"
+                                    value="CSE">
+                                                                                                                <input type="hidden" name="binds[:catalog_nbr_op]"
+                                    value="=">
+                                                                                                                <input type="hidden" name="binds[:catalog_nbr]"
+                                    value="114A">
+                                                                                                                <input type="hidden" name="binds[:title]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:instr_name_op]"
+                                    value="=">
+                                                                                                                <input type="hidden" name="binds[:instructor]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:crse_units_op]"
+                                    value="=">
+                                                                                                                <input type="hidden" name="binds[:crse_units_from]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:crse_units_to]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:crse_units_exact]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:days]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:times]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:acad_career]"
+                                    value="">
+                                                                                                                <input type="hidden" name="binds[:asynch]"
+                                    value="A">
+                                                                                                                <input type="hidden" name="binds[:hybrid]"
+                                    value="H">
+                                                                                                                <input type="hidden" name="binds[:synch]"
+                                    value="S">
+                                                                                                                <input type="hidden" name="binds[:person]"
+                                    value="P">
+                                                                            <input type="hidden" name="rec_start" value="0">
+
+                        <div id="segment_dropdown">
+                            <label style="font-weight: normal; margin-bottom: 0;">
+                                Display first&nbsp;
+                                <select name="rec_dur" id="rec_dur"
+                                    onchange="document.resultsForm.action.value = 'update_segment'; document.resultsForm.submit(); return false;"
+                                    style="padding: 2px;">
+                                    <option value="10" >10</option><option value="25" selected="selected">25</option><option value="50" >50</option><option value="100" >100</option>                                </select>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+
+        </div>
+
+        <div class="panel panel-default row" id="rowpanel_0" style="margin-top: 0px; margin-bottom: 0px;">
+    
+    <form action="index.php" id="detail_form_0" method="post">
+        <input name="action" type="hidden" value="detail">
+        <input name="class_data[:STRM]" type="hidden" value="2270">
+        <input name="class_data[:CLASS_NBR]" type="hidden" value="30628">
+        
+                                    <input name="binds[:term]" type="hidden" value="2270">
+                                                <input name="binds[:session_code]" type="hidden" value="">
+                                                <input name="binds[:reg_status]" type="hidden" value="all">
+                                                <input name="binds[:subject]" type="hidden" value="CSE">
+                                                <input name="binds[:catalog_nbr_op]" type="hidden" value="=">
+                                                <input name="binds[:catalog_nbr]" type="hidden" value="114A">
+                                                <input name="binds[:title]" type="hidden" value="">
+                                                <input name="binds[:instr_name_op]" type="hidden" value="=">
+                                                <input name="binds[:instructor]" type="hidden" value="">
+                                                <input name="binds[:crse_units_op]" type="hidden" value="=">
+                                                <input name="binds[:crse_units_from]" type="hidden" value="">
+                                                <input name="binds[:crse_units_to]" type="hidden" value="">
+                                                <input name="binds[:crse_units_exact]" type="hidden" value="">
+                                                <input name="binds[:days]" type="hidden" value="">
+                                                <input name="binds[:times]" type="hidden" value="">
+                                                <input name="binds[:acad_career]" type="hidden" value="">
+                                                <input name="binds[:asynch]" type="hidden" value="A">
+                                                <input name="binds[:hybrid]" type="hidden" value="H">
+                                                <input name="binds[:synch]" type="hidden" value="S">
+                                                <input name="binds[:person]" type="hidden" value="P">
+                    
+        <input name="rec_start" type="hidden" value="0">
+        <input name="rec_dur" type="hidden" value="25">
+    </form>
+
+    <div class="panel-heading panel-heading-custom">
+        <h2 style="margin:0px;">
+            <img src="https://pisa.ucsc.edu/cs9/prd/images/PS_CS_STATUS_OPEN_ICN_1.gif" alt="Open" title="Open"  aria-hidden="true"><span class='sr-only'>Open</span>            <a id="class_id_30628" href = "index.php?action=detail&amp;class_data=YToyOntzOjU6IjpTVFJNIjtzOjQ6IjIyNzAiO3M6MTA6IjpDTEFTU19OQlIiO3M6NToiMzA2MjgiO30%3D">CSE 114A - 01&nbsp;&nbsp;&nbsp;Found of Program Lang</a>        </h2>
+        
+        <h3 style="margin:0px;" title="General Education Requirement">
+            <span class="sr-only">General Education:</span>
+                      </h3>
+    </div>
+    
+    <div class="panel-body" style="padding-top: 2px;">
+        
+                <div class="row">
+            
+                        <div class="col-xs-6 col-sm-3">
+                Class Number: <a id="class_nbr_30628" href = "https://pisa.ucsc.edu/class_search/index.php?action=detail&class_data=YToyOntzOjU6IjpTVFJNIjtzOjQ6IjIyNzAiO3M6MTA6IjpDTEFTU19OQlIiO3M6NToiMzA2MjgiO30%253D">30628</a>            </div>
+
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-user text-muted"></i>
+                    <i class="sr-only">Instructor:</i>
+                    Arden, Owen                 </div>
+                            </div>
+
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-location-arrow text-muted"></i>
+                    <i class="sr-only">Location:</i>
+                    LEC                    :                    Humn Lecture Hall                </div>
+                            </div>
+
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-clock-o text-muted"></i>
+                    <i class="sr-only">Day and Time:</i>
+                    MWF 09:20AM-10:25AM                                     </div>
+                            </div>
+            
+        </div>
+
+        <div class="clearfix"></div>
+
+                <div class="row" style="margin-top: 8px;">
+            
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-user-plus text-muted"></i>
+                    <i class="sr-only">Enrollment:</i>
+                    29 of 120 Enrolled
+                </div>
+                            </div>
+
+                        <div class="col-xs-6 col-sm-3 hide-print">
+                <a href="https://ucsc.textbookx.com/classes/30628-2270" target="_blank"><i class="fa fa-book" aria-hidden="true"></i> Textbooks</a>            </div>
+            
+                        <div class="col-xs-6 col-sm-3 hide-print">
+                <a href="https://copycenter.ucsc.edu/course-readers/" target="_blank"> <i class="fa fa-book" aria-hidden="true"></i> Course Readers</a>            </div>
+            
+                        <div class="col-xs-6 col-sm-3">
+                
+                <div>
+                    <i aria-hidden="true" class="fa fa-graduation-cap text-muted"></i>
+                    Credits: 5 Units                </div>
+                
+                                <div class="hide-print">
+                                        <i class="sr-only">Instruction Mode:</i>
+                    <i aria-hidden="true" class="fa fa-users text-muted"></i>
+                    <strong><b>In Person</b></strong>
+                </div>
+
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="panel panel-default row" id="rowpanel_1" style="margin-top: 0px; margin-bottom: 0px;">
+    
+    <form action="index.php" id="detail_form_1" method="post">
+        <input name="action" type="hidden" value="detail">
+        <input name="class_data[:STRM]" type="hidden" value="2270">
+        <input name="class_data[:CLASS_NBR]" type="hidden" value="30621">
+        
+                                    <input name="binds[:term]" type="hidden" value="2270">
+                                                <input name="binds[:session_code]" type="hidden" value="">
+                                                <input name="binds[:reg_status]" type="hidden" value="all">
+                                                <input name="binds[:subject]" type="hidden" value="CSE">
+                                                <input name="binds[:catalog_nbr_op]" type="hidden" value="=">
+                                                <input name="binds[:catalog_nbr]" type="hidden" value="114A">
+                                                <input name="binds[:title]" type="hidden" value="">
+                                                <input name="binds[:instr_name_op]" type="hidden" value="=">
+                                                <input name="binds[:instructor]" type="hidden" value="">
+                                                <input name="binds[:crse_units_op]" type="hidden" value="=">
+                                                <input name="binds[:crse_units_from]" type="hidden" value="">
+                                                <input name="binds[:crse_units_to]" type="hidden" value="">
+                                                <input name="binds[:crse_units_exact]" type="hidden" value="">
+                                                <input name="binds[:days]" type="hidden" value="">
+                                                <input name="binds[:times]" type="hidden" value="">
+                                                <input name="binds[:acad_career]" type="hidden" value="">
+                                                <input name="binds[:asynch]" type="hidden" value="A">
+                                                <input name="binds[:hybrid]" type="hidden" value="H">
+                                                <input name="binds[:synch]" type="hidden" value="S">
+                                                <input name="binds[:person]" type="hidden" value="P">
+                    
+        <input name="rec_start" type="hidden" value="0">
+        <input name="rec_dur" type="hidden" value="25">
+    </form>
+
+    <div class="panel-heading panel-heading-custom">
+        <h2 style="margin:0px;">
+            <img src="https://pisa.ucsc.edu/cs9/prd/images/PS_CS_STATUS_OPEN_ICN_1.gif" alt="Open" title="Open"  aria-hidden="true"><span class='sr-only'>Open</span>            <a id="class_id_30621" href = "index.php?action=detail&amp;class_data=YToyOntzOjU6IjpTVFJNIjtzOjQ6IjIyNzAiO3M6MTA6IjpDTEFTU19OQlIiO3M6NToiMzA2MjEiO30%3D">CSE 114A - 02&nbsp;&nbsp;&nbsp;Found of Program Lang</a>        </h2>
+        
+        <h3 style="margin:0px;" title="General Education Requirement">
+            <span class="sr-only">General Education:</span>
+                      </h3>
+    </div>
+    
+    <div class="panel-body" style="padding-top: 2px;">
+        
+                <div class="row">
+            
+                        <div class="col-xs-6 col-sm-3">
+                Class Number: <a id="class_nbr_30621" href = "https://pisa.ucsc.edu/class_search/index.php?action=detail&class_data=YToyOntzOjU6IjpTVFJNIjtzOjQ6IjIyNzAiO3M6MTA6IjpDTEFTU19OQlIiO3M6NToiMzA2MjEiO30%253D">30621</a>            </div>
+
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-user text-muted"></i>
+                    <i class="sr-only">Instructor:</i>
+                    Kuper, Lindsey                 </div>
+                            </div>
+
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-location-arrow text-muted"></i>
+                    <i class="sr-only">Location:</i>
+                    LEC                    :                    J Baskin Engr 152                </div>
+                            </div>
+
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-clock-o text-muted"></i>
+                    <i class="sr-only">Day and Time:</i>
+                    MWF 04:00PM-05:05PM                                     </div>
+                            </div>
+            
+        </div>
+
+        <div class="clearfix"></div>
+
+                <div class="row" style="margin-top: 8px;">
+            
+                        <div class="col-xs-6 col-sm-3">
+                                <div>
+                    <i aria-hidden="true" class="fa fa-user-plus text-muted"></i>
+                    <i class="sr-only">Enrollment:</i>
+                    100 of 120 Enrolled
+                </div>
+                            </div>
+
+                        <div class="col-xs-6 col-sm-3 hide-print">
+                <a href="https://ucsc.textbookx.com/classes/30621-2270" target="_blank"><i class="fa fa-book" aria-hidden="true"></i> Textbooks</a>            </div>
+            
+                        <div class="col-xs-6 col-sm-3 hide-print">
+                <a href="https://copycenter.ucsc.edu/course-readers/" target="_blank"> <i class="fa fa-book" aria-hidden="true"></i> Course Readers</a>            </div>
+            
+                        <div class="col-xs-6 col-sm-3">
+                
+                <div>
+                    <i aria-hidden="true" class="fa fa-graduation-cap text-muted"></i>
+                    Credits: 5 Units                </div>
+                
+                                <div class="hide-print">
+                                        <i class="sr-only">Instruction Mode:</i>
+                    <i aria-hidden="true" class="fa fa-users text-muted"></i>
+                    <strong><b>In Person</b></strong>
+                </div>
+
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+        <div class="row hide-print" style="padding-left:5px;background-color: #eee;">
+            <b>1</b> to <b>2</b> of
+            <b>2</b>         </div>
+        <div class="hide-print">
+            <a href="index.php"><i class="fa fa-search" aria-hidden="true"></i> Begin new search</a> <br />
+            <a href="" id="search_link_bot" onClick="return false;"><i class="fa fa-search-plus" aria-hidden="true"></i>
+                Refine this search</a>
+        </div>
+
+    </div> 
+</div>
+
+</main></body></html>

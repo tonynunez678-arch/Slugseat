@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from email.message import EmailMessage
 from typing import Protocol
 
+import httpx
+
 from app.config import Settings
 
 log = logging.getLogger("slugseat.mailer")
@@ -47,5 +49,32 @@ class SmtpMailer:
         log.info("sent email to %s | %s", to, subject)
 
 
+class BrevoMailer:
+    url = "https://api.brevo.com/v3/smtp/email"
+
+    def __init__(self, settings: Settings, client: httpx.Client | None = None):
+        self.settings = settings
+        self.client = client or httpx.Client(timeout=20)
+
+    def send(self, to: str, subject: str, body: str) -> None:
+        response = self.client.post(
+            self.url,
+            headers={"api-key": self.settings.brevo_api_key, "accept": "application/json"},
+            json={
+                "sender": {"email": self.settings.email_from, "name": self.settings.email_from_name},
+                "to": [{"email": to}],
+                "subject": subject,
+                "textContent": body,
+            },
+        )
+        if response.status_code >= 400:
+            raise RuntimeError(f"Brevo rejected the email ({response.status_code}): {response.text}")
+        log.info("sent email to %s | %s", to, subject)
+
+
 def build_mailer(settings: Settings) -> Mailer:
-    return SmtpMailer(settings) if settings.smtp_host else ConsoleMailer()
+    if settings.brevo_api_key:
+        return BrevoMailer(settings)
+    if settings.smtp_host:
+        return SmtpMailer(settings)
+    return ConsoleMailer()

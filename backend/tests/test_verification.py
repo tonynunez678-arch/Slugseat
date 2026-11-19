@@ -119,3 +119,40 @@ def test_smtp_mailer_logs_in_and_sends(monkeypatch):
         ("login", "me@gmail.com", "app-pass"),
         ("send", "slug@ucsc.edu", "me@gmail.com", "Hi"),
     ]
+
+
+def test_brevo_mailer_posts_to_api():
+    import httpx
+
+    from app.config import Settings
+    from app.mailer import BrevoMailer, build_mailer
+
+    seen = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return httpx.Response(201, json={"messageId": "abc"})
+
+    settings = Settings(_env_file=None, brevo_api_key="key-123", email_from="me@gmail.com", smtp_host="smtp.gmail.com")
+    assert isinstance(build_mailer(settings), BrevoMailer)
+    BrevoMailer(settings, client=httpx.Client(transport=httpx.MockTransport(handler))).send("slug@ucsc.edu", "Hi", "Body")
+    request = seen[0]
+    assert str(request.url) == "https://api.brevo.com/v3/smtp/email"
+    assert request.headers["api-key"] == "key-123"
+    payload = __import__("json").loads(request.content)
+    assert payload["sender"] == {"email": "me@gmail.com", "name": "SlugSeat"}
+    assert payload["to"] == [{"email": "slug@ucsc.edu"}]
+    assert payload["textContent"] == "Body"
+
+
+def test_brevo_errors_are_raised():
+    import httpx
+    import pytest
+
+    from app.config import Settings
+    from app.mailer import BrevoMailer
+
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(401, json={"message": "Key not found"})))
+    mailer = BrevoMailer(Settings(_env_file=None, brevo_api_key="bad", email_from="me@gmail.com"), client=client)
+    with pytest.raises(RuntimeError, match="401"):
+        mailer.send("slug@ucsc.edu", "Hi", "Body")

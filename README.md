@@ -8,7 +8,7 @@ Students add the term, subject, course number, and the 5-digit class number of t
 
 - **Backend:** Python, FastAPI, SQLAlchemy, PostgreSQL
 - **Poller:** rate-limited scraper with a shared per-class cache
-- **Alerts:** email over SMTP, texts through Twilio, or console output for development
+- **Alerts:** email through the Brevo API or Gmail SMTP, texts through Twilio, or console output for development
 - **Frontend:** React and Vite
 - **CI:** pytest and a frontend build on GitHub Actions
 
@@ -55,7 +55,11 @@ npm run dev
 
 Open http://localhost:5173. Without Postgres, the backend falls back to a local SQLite file.
 
-## Email setup (Gmail)
+## Email setup
+
+Locally you can send through Gmail SMTP or Brevo. If `SLUGSEAT_BREVO_API_KEY` is set it is used, otherwise SMTP, otherwise emails are printed in the terminal.
+
+Gmail SMTP:
 
 1. Turn on 2-Step Verification for your Google account.
 2. Create an app password at https://myaccount.google.com/apppasswords.
@@ -67,7 +71,7 @@ cd backend
 python send_test_email.py you@ucsc.edu
 ```
 
-`backend/.env` is ignored by git, so the password never gets committed. With `SLUGSEAT_SMTP_HOST` left empty, emails are printed in the API and poller terminals instead of being sent.
+`backend/.env` is ignored by git, so the password never gets committed. With no email settings, emails are printed in the API and poller terminals instead of being sent.
 
 ## Checking the live class search
 
@@ -100,16 +104,18 @@ cd backend && pytest
 
 UCSC term codes are `2` + two-digit year + quarter digit: winter `0`, spring `2`, summer `4`, fall `8`. Fall 2026 is `2268`, Winter 2027 is `2270`.
 
-## Deploy to Render
+## Deploy for free
 
-The repo includes a `Dockerfile` and a `render.yaml` blueprint. One web service builds the React site, serves it next to the API, and runs the poller in a background thread. A managed Postgres database stores everything.
+SlugSeat runs on free tiers: Render hosts the app, Supabase hosts Postgres, Brevo sends email, and UptimeRobot keeps the server awake.
 
-1. Create a Render account and connect GitHub.
-2. In the Render dashboard choose **New** > **Blueprint** and pick this repository.
-3. Fill in the three secret values when asked: `SLUGSEAT_SMTP_USER`, `SLUGSEAT_SMTP_PASSWORD` (the Gmail app password) and `SLUGSEAT_EMAIL_FROM`.
-4. Click **Apply**. The site goes live at `https://<service-name>.onrender.com`.
+One Render web service (see `Dockerfile` and `render.yaml`) builds the React site, serves it next to the API, and runs the poller in a background thread.
 
-The web service uses the Starter plan because free web services sleep when idle, which would pause the poller, and Render blocks outgoing email on free web services. Free Render Postgres databases expire after 30 days, so upgrade the database before then to keep your data.
+1. **Database (Supabase):** create a free project with a password made of only letters and numbers. Click **Connect**, choose **Session pooler**, and copy the URI. Render can't reach Supabase's direct connection, which is IPv6 only.
+2. **Email (Brevo):** create a free account, add and confirm your sender email under **Senders, Domains & Dedicated IPs**, then create an API key under **SMTP & API** > **API Keys**. Render's free plan blocks SMTP, so SlugSeat uses Brevo's HTTPS API.
+3. **App (Render):** choose **New** > **Blueprint**, pick this repo, and fill in `SLUGSEAT_DATABASE_URL` (the Supabase URI), `SLUGSEAT_BREVO_API_KEY` and `SLUGSEAT_EMAIL_FROM` (the sender you confirmed in Brevo).
+4. **Stay awake (UptimeRobot):** add an HTTP monitor for `https://<your-app>.onrender.com/api/health` every 5 minutes. Render's free plan sleeps after 15 idle minutes, which would pause the poller.
+
+Free-tier limits change, so check each provider's pricing page. Brevo's free plan was 300 emails a day at the time of writing.
 
 ## Responsible use
 

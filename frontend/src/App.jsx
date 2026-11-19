@@ -19,6 +19,15 @@ export default function App() {
   const [watches, setWatches] = useState([]);
   const [message, setMessage] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [banner, setBanner] = useState(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const verified = params.get("verified");
+    if (verified === "1") setBanner({ kind: "ok", text: "Email confirmed! Your seat alerts are now active." });
+    if (verified === "0") setBanner({ kind: "error", text: "That confirmation link is invalid or expired. Add a class again to get a new one." });
+    if (verified) window.history.replaceState({}, "", window.location.pathname);
+  }, []);
 
   useEffect(() => {
     getTerms()
@@ -45,7 +54,7 @@ export default function App() {
     setBusy(true);
     setMessage(null);
     try {
-      await createWatch({
+      const created = await createWatch({
         email,
         term,
         subject,
@@ -54,7 +63,11 @@ export default function App() {
         phone: phone || null,
       });
       setClassNumber("");
-      setMessage({ kind: "ok", text: "You're on the list. We'll alert you when a seat opens." });
+      setMessage(
+        created.email_verified
+          ? { kind: "ok", text: "You're on the list. We'll alert you when a seat opens." }
+          : { kind: "ok", text: `Almost done! Check ${email} for a confirmation link. Alerts start once you confirm.` }
+      );
       await refresh();
     } catch (err) {
       setMessage({ kind: "error", text: err.message });
@@ -76,6 +89,8 @@ export default function App() {
         <h1>SlugSeat</h1>
         <p>Get a text or email the moment a seat opens in your UCSC class.</p>
       </header>
+
+      {banner && <p className={`banner ${banner.kind}`}>{banner.text}</p>}
 
       <form onSubmit={handleSubmit} className="card">
         <label>
@@ -122,6 +137,9 @@ export default function App() {
       {watches.length > 0 && (
         <section className="card">
           <h2>Your watched classes</h2>
+          {!watches[0].email_verified && (
+            <p className="muted hint">Confirm your email to turn these alerts on. Check your inbox and spam folder.</p>
+          )}
           <ul>
             {watches.map((w) => (
               <li key={w.id}>
@@ -129,7 +147,7 @@ export default function App() {
                   <strong>{w.class_status?.title || `${w.subject} ${w.catalog_number}`}</strong>
                   <span className="muted">#{w.class_number} · {termName(w.term)}</span>
                 </div>
-                <SeatBadge status={w.class_status} />
+                {w.email_verified ? <SeatBadge status={w.class_status} /> : <span className="badge pending">Unconfirmed</span>}
                 <button className="link" onClick={() => handleRemove(w.id)}>Remove</button>
               </li>
             ))}

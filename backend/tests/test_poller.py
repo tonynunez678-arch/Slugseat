@@ -30,10 +30,10 @@ class Clock:
         self.value += timedelta(seconds=seconds)
 
 
-def seed(session_factory, emails=("a@ucsc.edu",), number="21234", subject="CSE", catalog="101"):
+def seed(session_factory, emails=("a@ucsc.edu",), number="21234", subject="CSE", catalog="101", verified=True):
     with session_factory() as session:
         for email in emails:
-            user = User(email=email)
+            user = User(email=email, verified=verified)
             session.add(user)
             session.flush()
             session.add(Watch(user_id=user.id, term="2270", subject=subject, catalog_number=catalog, class_number=number))
@@ -128,3 +128,23 @@ def test_fetch_errors_are_isolated(session_factory):
     assert [a.class_number for a in notifier.sent] == ["22222"]
     with session_factory() as session:
         assert session.query(Alert).count() == 1
+
+
+def test_unverified_users_are_not_polled_or_alerted(session_factory):
+    seed(session_factory, verified=False)
+    search = FakeSearch()
+    search.enrolled = 30
+    notifier = ConsoleNotifier()
+    make_poller(session_factory, search, notifier, Clock()).run_once()
+    assert search.calls == 0
+    assert notifier.sent == []
+
+
+def test_unverified_watcher_skipped_when_course_is_polled_for_others(session_factory):
+    seed(session_factory, emails=("verified@ucsc.edu",))
+    seed(session_factory, emails=("pending@ucsc.edu",), verified=False)
+    search = FakeSearch()
+    search.enrolled = 30
+    notifier = ConsoleNotifier()
+    make_poller(session_factory, search, notifier, Clock()).run_once()
+    assert [a.email for a in notifier.sent] == ["verified@ucsc.edu"]

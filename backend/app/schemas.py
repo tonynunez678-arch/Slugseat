@@ -33,6 +33,7 @@ class WatchOut(BaseModel):
     catalog_number: str
     class_number: str
     active: bool
+    email_verified: bool
     created_at: datetime
     class_status: ClassStatus | None = None
 
@@ -44,6 +45,7 @@ class Term(BaseModel):
 
 class Metrics(BaseModel):
     users: int
+    verified_users: int
     active_watches: int
     classes_tracked: int
     alerts_sent: int

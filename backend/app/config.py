@@ -21,10 +21,15 @@ class Settings(BaseSettings):
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = ""
-    email_from: str = "alerts@slugseat.local"
+    email_from: str = ""
     twilio_account_sid: str = ""
     twilio_auth_token: str = ""
     twilio_from_number: str = ""
+
+    api_base_url: str = "http://localhost:8000"
+    frontend_url: str = "http://localhost:5173"
+    verify_token_ttl_hours: int = 24
+    verify_resend_seconds: int = 300
 
     cors_origins: list[str] = ["http://localhost:5173"]
 

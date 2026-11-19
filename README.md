@@ -16,8 +16,9 @@ Students add the term, subject, course number, and the 5-digit class number of t
 
 1. `POST /api/watches` saves a user and the class they want.
 2. `python -m app.poller` groups watches by course (for example CSE 101) and runs one class search per course, which returns every section at once. Each course is fetched at most once per cache window, no matter how many people or sections are watched, and requests are spaced out by a rate limiter.
-3. When a class goes from full to having open seats, each watcher gets one alert. If the class fills up again and later reopens, they are alerted again.
-4. Every alert is stored with the time the seat was detected and the time it was sent, so `GET /api/metrics` can report users, watches, alerts sent, and median alert latency.
+3. New users get a confirmation email. Only confirmed users are polled for or alerted, so nobody can sign up someone else's address. Tokens are random, stored only as SHA-256 hashes, expire after 24 hours, and work once.
+4. When a class goes from full to having open seats, each watcher gets one alert. If the class fills up again and later reopens, they are alerted again.
+5. Every alert is stored with the time the seat was detected and the time it was sent, so `GET /api/metrics` can report users, watches, alerts sent, and median alert latency.
 
 ## Run locally
 
@@ -54,6 +55,20 @@ npm run dev
 
 Open http://localhost:5173. Without Postgres, the backend falls back to a local SQLite file.
 
+## Email setup (Gmail)
+
+1. Turn on 2-Step Verification for your Google account.
+2. Create an app password at https://myaccount.google.com/apppasswords.
+3. Copy `.env.example` to `backend/.env` and fill in `SLUGSEAT_SMTP_USER`, `SLUGSEAT_SMTP_PASSWORD` (the 16-letter app password, no spaces) and `SLUGSEAT_EMAIL_FROM`.
+4. Check it works:
+
+```bash
+cd backend
+python send_test_email.py you@ucsc.edu
+```
+
+`backend/.env` is ignored by git, so the password never gets committed. With `SLUGSEAT_SMTP_HOST` left empty, emails are printed in the API and poller terminals instead of being sent.
+
 ## Checking the live class search
 
 ```bash
@@ -76,6 +91,7 @@ cd backend && pytest
 | GET | `/api/health` | Health check |
 | GET | `/api/terms` | Current and upcoming term codes |
 | POST | `/api/watches` | Watch a section: `email`, `term`, `subject`, `catalog_number`, `class_number`, optional `phone` in `+1...` format |
+| GET | `/api/verify?token=` | Confirm an email address from the link in the confirmation email |
 | GET | `/api/watches?email=` | List a user's active watches with the latest seat counts |
 | DELETE | `/api/watches/{id}?email=` | Stop watching |
 | GET | `/api/metrics` | Usage and alert latency numbers |
@@ -93,7 +109,6 @@ UCSC term codes are `2` + two-digit year + quarter digit: winter `0`, spring `2`
 
 ## Roadmap
 
-- Verify email addresses before sending alerts
 - Look up sections automatically so students only need to enter the course
 - Deploy the API and poller on Render or Fly.io
 - Alerting when the class search layout changes and parsing fails

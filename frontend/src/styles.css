@@ -54,6 +54,9 @@ li > div { flex: 1; display: grid; gap: 2px; }
 .badge.open { background: color-mix(in srgb, var(--open) 15%, transparent); color: var(--open); }
 .badge.full { background: color-mix(in srgb, var(--full) 15%, transparent); color: var(--full); }
 .badge.pending { background: var(--border); color: var(--muted); }
+.banner { margin: 16px 0 0; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); }
+.banner.ok { color: var(--open); }
+.banner.error { color: var(--full); }
 footer { margin-top: 24px; text-align: center; }
 
 @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }

@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.models import Alert, ClassSnapshot, Watch, utcnow
+from app.models import Alert, ClassSnapshot, User, Watch, utcnow
 from app.notifier import Notifier, SeatAlert
 from app.scraper import ClassInfo
 
@@ -35,7 +35,10 @@ class Poller:
 
     def watched_courses(self, session: Session) -> dict[tuple[str, str, str], set[str]]:
         rows = session.execute(
-            select(Watch.term, Watch.subject, Watch.catalog_number, Watch.class_number).where(Watch.active).distinct()
+            select(Watch.term, Watch.subject, Watch.catalog_number, Watch.class_number)
+            .join(User)
+            .where(Watch.active, User.verified)
+            .distinct()
         )
         courses: dict[tuple[str, str, str], set[str]] = {}
         for term, subject, catalog, number in rows:
@@ -93,7 +96,7 @@ class Poller:
             if snapshot.seats_open == 0:
                 watch.notified_open = False
                 continue
-            if watch.notified_open:
+            if watch.notified_open or not watch.user.verified:
                 continue
             self.notifier.send(
                 SeatAlert(

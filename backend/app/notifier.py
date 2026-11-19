@@ -1,12 +1,11 @@
 import logging
-import smtplib
 from dataclasses import dataclass, field
-from email.message import EmailMessage
 from typing import Protocol
 
 import httpx
 
 from app.config import Settings
+from app.mailer import Mailer, build_mailer
 
 log = logging.getLogger("slugseat.notifier")
 
@@ -45,20 +44,17 @@ class ConsoleNotifier:
 class EmailNotifier:
     channel = "email"
 
-    def __init__(self, settings: Settings):
-        self.settings = settings
+    def __init__(self, mailer: Mailer, site_url: str = ""):
+        self.mailer = mailer
+        self.site_url = site_url
 
     def send(self, alert: SeatAlert) -> None:
-        message = EmailMessage()
-        message["Subject"] = f"Seat open: {alert.title}"
-        message["From"] = self.settings.email_from
-        message["To"] = alert.email
-        message.set_content(alert.text)
-        with smtplib.SMTP(self.settings.smtp_host, self.settings.smtp_port) as smtp:
-            smtp.starttls()
-            if self.settings.smtp_user:
-                smtp.login(self.settings.smtp_user, self.settings.smtp_password)
-            smtp.send_message(message)
+        body = (
+            f"{alert.text}\n\n"
+            "Seats can go fast, so enroll through MyUCSC as soon as you can.\n\n"
+            f"Manage your alerts: {self.site_url}\n"
+        )
+        self.mailer.send(alert.email, f"Seat open: {alert.title}", body)
 
 
 class TwilioNotifier:
@@ -82,9 +78,10 @@ class TwilioNotifier:
         response.raise_for_status()
 
 
-def build_notifier(settings: Settings) -> Notifier:
+def build_notifier(settings: Settings, mailer: Mailer | None = None) -> Notifier:
+    mailer = mailer or build_mailer(settings)
     if settings.notifier == "email":
-        return EmailNotifier(settings)
+        return EmailNotifier(mailer, settings.frontend_url)
     if settings.notifier == "sms":
-        return TwilioNotifier(settings, fallback=EmailNotifier(settings))
+        return TwilioNotifier(settings, fallback=EmailNotifier(mailer, settings.frontend_url))
     return ConsoleNotifier()

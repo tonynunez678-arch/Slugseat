@@ -10,7 +10,8 @@ from sqlalchemy.pool import StaticPool
 from sqlalchemy import create_engine
 
 from app.db import get_session, init_db
-from app.main import app
+from app.mailer import ConsoleMailer
+from app.main import app, get_mailer
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -30,12 +31,18 @@ def session_factory():
 
 
 @pytest.fixture
-def client(session_factory):
+def mailer():
+    return ConsoleMailer()
+
+
+@pytest.fixture
+def client(session_factory, mailer):
     def override():
         with session_factory() as session:
             yield session
 
     app.dependency_overrides[get_session] = override
+    app.dependency_overrides[get_mailer] = lambda: mailer
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()

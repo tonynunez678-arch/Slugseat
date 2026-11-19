@@ -16,6 +16,9 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     phone: Mapped[str | None] = mapped_column(String(32))
+    verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    verify_token_hash: Mapped[str | None] = mapped_column(String(64), index=True)
+    verify_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     watches: Mapped[list["Watch"]] = relationship(back_populates="user", cascade="all, delete-orphan")

@@ -17,7 +17,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 @pytest.fixture
 def results_html() -> str:
-    return (FIXTURES / "results.html").read_text()
+    return (FIXTURES / "results.html").read_text(encoding="utf-8")
 
 
 @pytest.fixture

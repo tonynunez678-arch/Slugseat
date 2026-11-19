@@ -28,6 +28,8 @@ class Watch(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     term: Mapped[str] = mapped_column(String(8))
+    subject: Mapped[str] = mapped_column(String(8))
+    catalog_number: Mapped[str] = mapped_column(String(8))
     class_number: Mapped[str] = mapped_column(String(8))
     active: Mapped[bool] = mapped_column(Boolean, default=True)
     notified_open: Mapped[bool] = mapped_column(Boolean, default=False)

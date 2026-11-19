@@ -12,6 +12,8 @@ export default function App() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [term, setTerm] = useState("");
+  const [subject, setSubject] = useState("");
+  const [catalogNumber, setCatalogNumber] = useState("");
   const [classNumber, setClassNumber] = useState("");
   const [consent, setConsent] = useState(false);
   const [watches, setWatches] = useState([]);
@@ -37,7 +39,14 @@ export default function App() {
     setBusy(true);
     setMessage(null);
     try {
-      await createWatch({ email, term, class_number: classNumber, phone: phone || null });
+      await createWatch({
+        email,
+        term,
+        subject,
+        catalog_number: catalogNumber,
+        class_number: classNumber,
+        phone: phone || null,
+      });
       setClassNumber("");
       setMessage({ kind: "ok", text: "You're on the list. We'll alert you when a seat opens." });
       await refresh();
@@ -82,9 +91,20 @@ export default function App() {
           </label>
           <label>
             Class number
-            <input required inputMode="numeric" pattern="\d{5}" value={classNumber} onChange={(e) => setClassNumber(e.target.value.trim())} placeholder="21234" />
+            <input required inputMode="numeric" pattern="\d{5}" value={classNumber} onChange={(e) => setClassNumber(e.target.value.trim())} placeholder="30628" />
           </label>
         </div>
+        <div className="row">
+          <label>
+            Subject
+            <input required pattern="[A-Za-z]{2,5}" value={subject} onChange={(e) => setSubject(e.target.value.trim().toUpperCase())} placeholder="CSE" />
+          </label>
+          <label>
+            Course number
+            <input required pattern="\d{1,3}[A-Za-z]{0,2}" value={catalogNumber} onChange={(e) => setCatalogNumber(e.target.value.trim().toUpperCase())} placeholder="101" />
+          </label>
+        </div>
+        <p className="muted hint">Find all three on the UCSC class search. The class number is the 5-digit number for your section.</p>
         <label className="consent">
           <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
           I agree to receive seat alerts for the classes I add. I can remove them anytime.
@@ -100,7 +120,7 @@ export default function App() {
             {watches.map((w) => (
               <li key={w.id}>
                 <div>
-                  <strong>{w.class_status?.title || `Class #${w.class_number}`}</strong>
+                  <strong>{w.class_status?.title || `${w.subject} ${w.catalog_number}`}</strong>
                   <span className="muted">#{w.class_number} · {termName(w.term)}</span>
                 </div>
                 <SeatBadge status={w.class_status} />

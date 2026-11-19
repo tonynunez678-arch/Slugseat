@@ -1,6 +1,9 @@
+import re
+
 import httpx
 import pytest
 
+from tests.conftest import FIXTURES
 from app.scraper import ClassSearchClient, RateLimiter, parse_results, search_form, term_code
 
 
@@ -19,6 +22,18 @@ def test_parse_results_empty():
     assert parse_results("<html><body>No classes found</body></html>") == []
 
 
+def test_parse_real_no_matches_page():
+    page = (FIXTURES / "no_matches.html").read_text(encoding="utf-8")
+    assert parse_results(page) == []
+
+
+def test_search_form_matches_live_form_fields():
+    page = (FIXTURES / "no_matches.html").read_text(encoding="utf-8")
+    live_fields = set(re.findall(r'name="(binds\[:[a-z_]+\])"', page))
+    sent_fields = {k for k in search_form("2270", "CSE", "101") if k.startswith("binds")}
+    assert sent_fields <= live_fields
+
+
 @pytest.mark.parametrize(
     ("year", "quarter", "code"),
     [(2024, "fall", "2248"), (2025, "winter", "2250"), (2025, "spring", "2252"), (2027, "Winter", "2270")],
@@ -27,10 +42,11 @@ def test_term_code(year, quarter, code):
     assert term_code(year, quarter) == code
 
 
-def test_search_form_sets_class_number():
-    form = search_form("2270", class_number="21234")
+def test_search_form_sets_course():
+    form = search_form("2270", "CSE", "101")
     assert form["binds[:term]"] == "2270"
-    assert form["binds[:class_nbr]"] == "21234"
+    assert form["binds[:subject]"] == "CSE"
+    assert form["binds[:catalog_nbr]"] == "101"
     assert form["action"] == "results"
 
 
@@ -60,8 +76,10 @@ def test_client_fetch_class(results_html):
 
     http = httpx.Client(transport=httpx.MockTransport(handler))
     client = ClassSearchClient("https://example.test/search", "test", RateLimiter(0), client=http)
-    info = client.fetch_class("2270", "21240")
+    info = client.fetch_class("2270", "CSE", "101", "21240")
     assert info is not None and info.capacity == 250
-    assert client.fetch_class("2270", "99999") is None
-    assert client.requests_made == 2
-    assert "class_nbr%5D=21240" in seen[0]
+    assert client.fetch_class("2270", "CSE", "101", "99999") is None
+    assert len(client.fetch_course("2270", "CSE", "101")) == 2
+    assert client.requests_made == 3
+    assert "subject%5D=CSE" in seen[0]
+    assert "catalog_nbr%5D=101" in seen[0]

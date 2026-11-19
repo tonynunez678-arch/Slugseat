@@ -49,6 +49,7 @@ ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
 li > div { flex: 1; display: grid; gap: 2px; }
 .muted { color: var(--muted); font-size: 13px; }
+.hint { margin: -4px 0 0; }
 .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
 .badge.open { background: color-mix(in srgb, var(--open) 15%, transparent); color: var(--open); }
 .badge.full { background: color-mix(in srgb, var(--full) 15%, transparent); color: var(--full); }

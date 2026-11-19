@@ -28,10 +28,11 @@ def term_code(year: int, quarter: str) -> str:
     return str(2000 + (year % 100) * 10 + QUARTER_DIGITS[quarter.lower()])
 
 
-def search_form(term: str, class_number: str = "", subject: str = "", catalog_number: str = "") -> dict[str, str]:
+def search_form(term: str, subject: str, catalog_number: str) -> dict[str, str]:
     return {
         "action": "results",
         "binds[:term]": term,
+        "binds[:session_code]": "",
         "binds[:reg_status]": "all",
         "binds[:subject]": subject,
         "binds[:catalog_nbr_op]": "=",
@@ -39,7 +40,6 @@ def search_form(term: str, class_number: str = "", subject: str = "", catalog_nu
         "binds[:title]": "",
         "binds[:instr_name_op]": "=",
         "binds[:instructor]": "",
-        "binds[:ge]": "",
         "binds[:crse_units_op]": "=",
         "binds[:crse_units_from]": "",
         "binds[:crse_units_to]": "",
@@ -51,7 +51,6 @@ def search_form(term: str, class_number: str = "", subject: str = "", catalog_nu
         "binds[:hybrid]": "H",
         "binds[:synch]": "S",
         "binds[:person]": "P",
-        "binds[:class_nbr]": class_number,
     }
 
 
@@ -109,12 +108,15 @@ class ClassSearchClient:
         self.requests_made = 0
         self._client = client or httpx.Client(timeout=timeout, headers={"User-Agent": user_agent}, follow_redirects=True)
 
-    def fetch_class(self, term: str, class_number: str) -> ClassInfo | None:
+    def fetch_course(self, term: str, subject: str, catalog_number: str) -> list[ClassInfo]:
         self.limiter.wait()
         self.requests_made += 1
-        response = self._client.post(self.url, data=search_form(term, class_number=class_number))
+        response = self._client.post(self.url, data=search_form(term, subject, catalog_number))
         response.raise_for_status()
-        for info in parse_results(response.text):
+        return parse_results(response.text)
+
+    def fetch_class(self, term: str, subject: str, catalog_number: str, class_number: str) -> ClassInfo | None:
+        for info in self.fetch_course(term, subject, catalog_number):
             if info.class_number == class_number:
                 return info
         return None

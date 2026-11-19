@@ -33,45 +33,57 @@ class Poller:
         self.cache_ttl = timedelta(seconds=cache_ttl_seconds)
         self.now = now
 
-    def watched_classes(self, session: Session) -> list[tuple[str, str]]:
-        rows = session.execute(select(Watch.term, Watch.class_number).where(Watch.active).distinct())
-        return sorted((term, number) for term, number in rows)
+    def watched_courses(self, session: Session) -> dict[tuple[str, str, str], set[str]]:
+        rows = session.execute(
+            select(Watch.term, Watch.subject, Watch.catalog_number, Watch.class_number).where(Watch.active).distinct()
+        )
+        courses: dict[tuple[str, str, str], set[str]] = {}
+        for term, subject, catalog, number in rows:
+            courses.setdefault((term, subject, catalog), set()).add(number)
+        return dict(sorted(courses.items()))
 
     def run_once(self) -> PollStats:
         stats = PollStats()
         with self.session_factory() as session:
-            for term, number in self.watched_classes(session):
+            for (term, subject, catalog), numbers in self.watched_courses(session).items():
                 try:
-                    self._check(session, term, number, stats)
+                    self._check(session, term, subject, catalog, numbers, stats)
                     session.commit()
                 except Exception as exc:
                     session.rollback()
-                    stats.errors.append(f"{term}/{number}: {exc}")
-                    log.exception("failed checking %s/%s", term, number)
+                    stats.errors.append(f"{term}/{subject} {catalog}: {exc}")
+                    log.exception("failed checking %s/%s %s", term, subject, catalog)
         return stats
 
-    def _check(self, session: Session, term: str, number: str, stats: PollStats) -> None:
+    def _is_fresh(self, snapshots: list[ClassSnapshot | None], now: datetime) -> bool:
+        return all(s is not None and now - _aware(s.checked_at) < self.cache_ttl for s in snapshots)
+
+    def _check(self, session: Session, term: str, subject: str, catalog: str, numbers: set[str], stats: PollStats) -> None:
         now = self.now()
-        snapshot = session.get(ClassSnapshot, (term, number))
-        if snapshot and now - _aware(snapshot.checked_at) < self.cache_ttl:
+        snapshots = {n: session.get(ClassSnapshot, (term, n)) for n in numbers}
+        if self._is_fresh(list(snapshots.values()), now):
             stats.cache_hits += 1
             return
-        info: ClassInfo | None = self.fetch(term, number)
+        results: list[ClassInfo] = self.fetch(term, subject, catalog)
         stats.classes_checked += 1
-        if info is None:
-            return
-        was_open = snapshot is not None and snapshot.seats_open > 0
-        if snapshot is None:
-            snapshot = ClassSnapshot(term=term, class_number=number)
-            session.add(snapshot)
-        snapshot.title = info.title
-        snapshot.status = info.status
-        snapshot.enrolled = info.enrolled
-        snapshot.capacity = info.capacity
-        snapshot.checked_at = now
-        if info.seats_open > 0 and not was_open:
-            snapshot.opened_at = now
-        self._sync_watches(session, snapshot, stats)
+        by_number = {info.class_number: info for info in results}
+        for number in sorted(numbers):
+            info = by_number.get(number)
+            if info is None:
+                continue
+            snapshot = snapshots[number]
+            was_open = snapshot is not None and snapshot.seats_open > 0
+            if snapshot is None:
+                snapshot = ClassSnapshot(term=term, class_number=number)
+                session.add(snapshot)
+            snapshot.title = info.title
+            snapshot.status = info.status
+            snapshot.enrolled = info.enrolled
+            snapshot.capacity = info.capacity
+            snapshot.checked_at = now
+            if info.seats_open > 0 and not was_open:
+                snapshot.opened_at = now
+            self._sync_watches(session, snapshot, stats)
 
     def _sync_watches(self, session: Session, snapshot: ClassSnapshot, stats: PollStats) -> None:
         watches = session.scalars(
@@ -120,7 +132,7 @@ def main() -> None:
         RateLimiter(settings.min_request_interval),
         timeout=settings.request_timeout_seconds,
     )
-    poller = Poller(SessionLocal, client.fetch_class, build_notifier(settings), settings.cache_ttl_seconds)
+    poller = Poller(SessionLocal, client.fetch_course, build_notifier(settings), settings.cache_ttl_seconds)
     try:
         while True:
             started = time.monotonic()

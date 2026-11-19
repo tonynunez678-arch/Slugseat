@@ -44,6 +44,8 @@ def _watch_out(session: Session, watch: Watch) -> WatchOut:
     return WatchOut(
         id=watch.id,
         term=watch.term,
+        subject=watch.subject,
+        catalog_number=watch.catalog_number,
         class_number=watch.class_number,
         active=watch.active,
         created_at=watch.created_at,
@@ -82,9 +84,17 @@ def create_watch(payload: WatchCreate, session: Session = Depends(get_session)) 
         select(Watch).where(Watch.user_id == user.id, Watch.term == payload.term, Watch.class_number == payload.class_number)
     )
     if watch is None:
-        watch = Watch(user_id=user.id, term=payload.term, class_number=payload.class_number)
+        watch = Watch(
+            user_id=user.id,
+            term=payload.term,
+            subject=payload.subject,
+            catalog_number=payload.catalog_number,
+            class_number=payload.class_number,
+        )
         session.add(watch)
     else:
+        watch.subject = payload.subject
+        watch.catalog_number = payload.catalog_number
         watch.active = True
         watch.notified_open = False
     session.commit()

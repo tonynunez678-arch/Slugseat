@@ -8,12 +8,14 @@ from app.scraper import parse_results, search_form
 
 
 def main() -> None:
-    term = sys.argv[1] if len(sys.argv) > 1 else "2270"
-    class_number = sys.argv[2] if len(sys.argv) > 2 else ""
+    if len(sys.argv) != 4:
+        print("usage: python debug_fetch.py TERM SUBJECT COURSE_NUMBER   e.g. python debug_fetch.py 2270 CSE 101")
+        sys.exit(1)
+    term, subject, catalog = sys.argv[1], sys.argv[2].upper(), sys.argv[3].upper()
     settings = get_settings()
     with httpx.Client(headers={"User-Agent": settings.user_agent}, follow_redirects=True, timeout=20) as client:
         landing = client.get(settings.class_search_url)
-        response = client.post(settings.class_search_url, data=search_form(term, class_number=class_number))
+        response = client.post(settings.class_search_url, data=search_form(term, subject, catalog))
     out = Path("page.html")
     out.write_text(response.text, encoding="utf-8")
     print(f"landing page status: {landing.status_code}")
@@ -21,7 +23,7 @@ def main() -> None:
     print(f"saved to {out.resolve()}")
     classes = parse_results(response.text)
     print(f"parsed {len(classes)} classes")
-    for info in classes[:5]:
+    for info in classes[:10]:
         print(f"  {info}")
 
 

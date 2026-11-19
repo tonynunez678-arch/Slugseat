@@ -11,9 +11,12 @@ class FakeSearch:
         self.enrolled = 40
         self.calls = 0
 
-    def __call__(self, term, number):
+    def __call__(self, term, subject, catalog):
         self.calls += 1
-        return ClassInfo(number, "CSE 101 - 01 Intro Data Struct&Alg", "Open", self.enrolled, 40)
+        return [
+            ClassInfo("21234", "CSE 101 - 01 Intro Data Struct&Alg", "Open", self.enrolled, 40),
+            ClassInfo("21240", "CSE 101 - 02 Intro Data Struct&Alg", "Closed", 250, 250),
+        ]
 
 
 class Clock:
@@ -27,13 +30,13 @@ class Clock:
         self.value += timedelta(seconds=seconds)
 
 
-def seed(session_factory, emails=("a@ucsc.edu",), number="21234"):
+def seed(session_factory, emails=("a@ucsc.edu",), number="21234", subject="CSE", catalog="101"):
     with session_factory() as session:
         for email in emails:
             user = User(email=email)
             session.add(user)
             session.flush()
-            session.add(Watch(user_id=user.id, term="2270", class_number=number))
+            session.add(Watch(user_id=user.id, term="2270", subject=subject, catalog_number=catalog, class_number=number))
         session.commit()
 
 
@@ -89,6 +92,17 @@ def test_cache_shares_one_request_per_class(session_factory):
     assert search.calls == 1
 
 
+def test_one_request_covers_every_section_of_a_course(session_factory):
+    seed(session_factory, emails=("a@ucsc.edu",), number="21234")
+    seed(session_factory, emails=("b@ucsc.edu",), number="21240")
+    search = FakeSearch()
+    search.enrolled = 39
+    notifier = ConsoleNotifier()
+    make_poller(session_factory, search, notifier, Clock()).run_once()
+    assert search.calls == 1
+    assert [a.class_number for a in notifier.sent] == ["21234"]
+
+
 def test_inactive_watches_are_skipped(session_factory):
     seed(session_factory)
     with session_factory() as session:
@@ -100,13 +114,13 @@ def test_inactive_watches_are_skipped(session_factory):
 
 
 def test_fetch_errors_are_isolated(session_factory):
-    seed(session_factory, number="11111")
-    seed(session_factory, emails=("b@ucsc.edu",), number="22222")
+    seed(session_factory, number="11111", subject="CSE", catalog="101")
+    seed(session_factory, emails=("b@ucsc.edu",), number="22222", subject="MATH", catalog="19A")
 
-    def search(term, number):
-        if number == "11111":
+    def search(term, subject, catalog):
+        if subject == "CSE":
             raise RuntimeError("boom")
-        return ClassInfo(number, "MATH 19A", "Open", 10, 40)
+        return [ClassInfo("22222", "MATH 19A - 01 Calculus", "Open", 10, 40)]
 
     notifier = ConsoleNotifier()
     stats = make_poller(session_factory, search, notifier, Clock()).run_once()

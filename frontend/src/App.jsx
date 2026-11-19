@@ -29,6 +29,12 @@ export default function App() {
       .catch((err) => setMessage({ kind: "error", text: err.message }));
   }, []);
 
+  useEffect(() => {
+    if (watches.length === 0) return undefined;
+    const timer = setInterval(() => refresh().catch(() => {}), 30000);
+    return () => clearInterval(timer);
+  }, [watches.length, email]);
+
   async function refresh(forEmail = email) {
     if (!forEmail) return;
     setWatches(await listWatches(forEmail));
